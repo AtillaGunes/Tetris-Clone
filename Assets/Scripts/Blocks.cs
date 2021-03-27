@@ -6,6 +6,9 @@ public class Blocks : MonoBehaviour
 {
     float fall = 0;
     public float fallSpeed = 1;
+
+    public bool allowRotation = true;
+    public bool limitRotation = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,21 +41,44 @@ public class Blocks : MonoBehaviour
                transform.position += new Vector3(1, 0, 0);
            }
 
-        } else if (Input.GetKeyDown(KeyCode.W)){    
-            transform.Rotate (0, 0, 90);
-            
-            if(CheckPosition() ) {
-
-           }else {
-               transform.Rotate(0, 0, -90);
-           }
-
+        } else if (Input.GetKeyDown(KeyCode.W)){  
+            if(allowRotation) {
+                if(limitRotation) {
+                    if(transform.rotation.eulerAngles.z >= 90) {
+                        transform.Rotate(0, 0,-90);
+                    }else {
+                        transform.Rotate(0, 0, 90);
+                    }
+                }
+                else {
+                    transform.Rotate(0 , 0, 90);
+                }
+                if(CheckPosition()) {
+                
+                }else{
+                    if(limitRotation){
+                     if(transform.rotation.eulerAngles.z >= 90) {
+                        transform.Rotate(0, 0, -90);
+                     }else{
+                        transform.Rotate(0, 0, 90);
+                     }
+                    }else{
+                        transform.Rotate(0, 0, -90);
+                    }
+                    
+                }
+             }
+                          
+                           
+                
         } else if (Input.GetKeyDown(KeyCode.S) || Time.time - fall >= fallSpeed){
             transform.position += new Vector3(0, -1, 0);
             if(CheckPosition() ) {
 
            }else {
                transform.position += new Vector3(0, 1, 0);
+               enabled = false;
+               FindObjectOfType<Game>().Spawnblock();
            }
             fall = Time.time;
         }
@@ -67,5 +93,8 @@ public class Blocks : MonoBehaviour
             }
         }
         return true;
-    }
-}
+        }
+    } 
+  
+  
+
