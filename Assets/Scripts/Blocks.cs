@@ -27,7 +27,7 @@ public class Blocks : MonoBehaviour
            transform.position += new Vector3(1, 0, 0);
 
            if(CheckPosition() ) {
-
+              FindObjectOfType<Game>().UpdateGrid(this);
            } else {
                transform.position += new Vector3(-1, 0, 0);
            }
@@ -36,7 +36,7 @@ public class Blocks : MonoBehaviour
            transform.position += new Vector3(-1, 0, 0);
            
            if(CheckPosition() ) {
-
+              FindObjectOfType<Game>().UpdateGrid(this);
            }else {
                transform.position += new Vector3(1, 0, 0);
            }
@@ -54,7 +54,7 @@ public class Blocks : MonoBehaviour
                     transform.Rotate(0 , 0, 90);
                 }
                 if(CheckPosition()) {
-                
+                   FindObjectOfType<Game>().UpdateGrid(this);
                 }else{
                     if(limitRotation){
                      if(transform.rotation.eulerAngles.z >= 90) {
@@ -74,9 +74,13 @@ public class Blocks : MonoBehaviour
         } else if (Input.GetKeyDown(KeyCode.S) || Time.time - fall >= fallSpeed){
             transform.position += new Vector3(0, -1, 0);
             if(CheckPosition() ) {
-
+               FindObjectOfType<Game>().UpdateGrid(this);
            }else {
                transform.position += new Vector3(0, 1, 0);
+               FindObjectOfType<Game>().DeleteRow();
+               if (FindObjectOfType<Game>().CheckIsAbove(this)){
+                   FindObjectOfType<Game>().GameOver();
+               }
                enabled = false;
                FindObjectOfType<Game>().Spawnblock();
            }
@@ -91,10 +95,13 @@ public class Blocks : MonoBehaviour
             if( FindObjectOfType<Game>().ChechInside (pos) == false) {
                 return false;
             }
+            if(FindObjectOfType<Game>().GetTransform(pos) != null && FindObjectOfType<Game>().GetTransform(pos).parent != transform){
+                return false;
+            }
         }
         return true;
-        }
-    } 
+    }
+ } 
   
   
 
